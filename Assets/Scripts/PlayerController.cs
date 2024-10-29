@@ -9,6 +9,12 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
 
     [Header("Look")]
+    public Transform cameraContainer;
+    private float minXLook = -85f;
+    private float maxXLook = 85f;
+    private float camCurXRot;
+    public float lookSensitivity;
+
     private Vector2 mouseDelta;
 
 
@@ -21,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void FixedUpdate()
@@ -31,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-
+        Look();
     }
 
     public void OnMoveinput(InputAction.CallbackContext context)
@@ -57,6 +63,15 @@ public class PlayerController : MonoBehaviour
         {
             _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
         }
+    }
+
+    private void Look()
+    {
+        camCurXRot += mouseDelta.y * lookSensitivity;
+        camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
+        cameraContainer.localEulerAngles = new Vector3(-camCurXRot,0,0);
+
+        transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
 
     private void Move()
