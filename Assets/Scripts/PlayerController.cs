@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     public float moveSpeed;
     public float jumpForce;
+    public LayerMask groundLayerMask;
 
     [Header("Look")]
     public Transform cameraContainer;
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 mouseDelta;
 
+    public bool canLook = true;
 
     private Rigidbody _rigidbody;
 
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        canLook = true;
     }
 
     private void FixedUpdate()
@@ -37,7 +40,10 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        Look();
+        if (canLook)
+        {
+            CameraLook();
+        }
     }
 
     public void OnMoveinput(InputAction.CallbackContext context)
@@ -57,19 +63,11 @@ public class PlayerController : MonoBehaviour
         mouseDelta = context.ReadValue<Vector2>();
     }
 
-    public void OnJumpInput(InputAction.CallbackContext context)
-    {
-        if (context.phase == InputActionPhase.Started)
-        {
-            _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
-        }
-    }
-
-    private void Look()
+    private void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
-        cameraContainer.localEulerAngles = new Vector3(-camCurXRot,0,0);
+        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
 
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
@@ -81,5 +79,34 @@ public class PlayerController : MonoBehaviour
         direction.y = _rigidbody.velocity.y;
 
         _rigidbody.velocity = direction;
+    }
+
+    public void OnJumpInput(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started && IsGrounded())
+        {
+            _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private bool IsGrounded()
+    {
+        Ray[] rays = new Ray[]
+        {
+            new Ray(transform.position + transform.forward * 0.2f + transform.up * 0.1f, Vector3.down),
+            new Ray(transform.position + -transform.forward * 0.2f + transform.up * 0.1f, Vector3.down),
+            new Ray(transform.position + transform.right * 0.2f + transform.up * 0.1f, Vector3.down),
+            new Ray(transform.position + -transform.right * 0.2f + transform.up * 0.1f , Vector3.down)
+        };
+
+        for (int i = 0; i < rays.Length; i++)
+        {
+            if(Physics.Raycast(rays[i],0.1f,groundLayerMask))
+            {
+                return true;
+            }
+
+        }
+        return false;
     }
 }

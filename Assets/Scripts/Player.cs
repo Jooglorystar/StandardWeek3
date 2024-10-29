@@ -2,7 +2,7 @@
 
 public class Player : MonoBehaviour
 {
-    private PlayerController controller;
+    public PlayerController controller;
 
     private void Start()
     {
