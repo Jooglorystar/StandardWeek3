@@ -16,3 +16,10 @@ CharacterManager는 Player의 정보를 전역적으로 사용할 수 있게 해
 FixedUpdate는 고정된 프레임으로 실행되는 메서드로 알고 있고, LateUpdate는 Update류 메서드들 중에 제일 마지막에 실행하는 메서드로 알고 있다.  
 움직임을 FixedUpdate에서 구현하는 까닭은 매 프레임마다 update를 할 경우 실행 환경에 따라 다른 결과가 나올 확률이 있지만, 고정된 프레임 값을 이용할 경우 그 문제를 줄일 수 있기 때문이다. LateUpdate에 카메라 움직임을 넣은 이유는, 모든 움직임이 끝난 후에 카메라를 움직여, 혹시라도 있을 표시 오류를 방지하기 위함이다.
 
+## Q2 분석문제
+
+별도의 UI스크립트를 만드는 이유는 추가적인 UI가 필요할 때 추가가 용이하기 때문이다.  
+본 예시에서는 TakePhysicalDamage()라는 메서드가 포함된 IDamagable이라는 인터페이스를 사용했다. 그리고 CampFire에서 해당 인터페이스를 가진 모든 오브젝트에 데미지를 줄 수 있는 식의 구현을 하였다.  
+이를 통해 플레이어가 아니더라도, IDamagable이 상속된 적 유닛도 CampFire에 접근한다면 데미지를 입을 수 있다.  
+UI는 각 수치를 Condition.cs를 통해 증감과 fillAmount관리를 하고, 이를 UIconditions.cs에서 통합해 관리한다.  
+이는 CharacterManager에서 접근할 수 있도록 Player오브젝트에도 추가한다.
