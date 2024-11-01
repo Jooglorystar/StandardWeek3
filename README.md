@@ -23,3 +23,10 @@ FixedUpdate는 고정된 프레임으로 실행되는 메서드로 알고 있고
 이를 통해 플레이어가 아니더라도, IDamagable이 상속된 적 유닛도 CampFire에 접근한다면 데미지를 입을 수 있다.  
 UI는 각 수치를 Condition.cs를 통해 증감과 fillAmount관리를 하고, 이를 UIconditions.cs에서 통합해 관리한다.  
 이는 CharacterManager에서 접근할 수 있도록 Player오브젝트에도 추가한다.
+
+## Q3 분석문제
+
+기본적으로 바닥에 떨어진 오브젝트들은 IInteractable라는 인터페이스를 상속받는다.  
+플레이어는 화면 가운데에서 아이템을 감지하는 Ray를 발사해 감지하고, 해당하는 아이템이 있다면 그 아이템에서 IInteractable을 받아오고, 그 정보를 띄워주는 역할을 한다.  
+IInteractable은 GetInteractPrompt()와 OnInteract()라는 메서드를 가지고 있는데, ItemObject에서는 GetInteractPrompt()에서 아이템의 이름과 설명 데이터를 string 값으로 반환하고, OnInteract()는 아이템 획득에 관련된 메서드가 구현되어있다.  
+인벤토리는 크게 아이템슬롯들과 선택한 아이템의 정보를 표시하는 정보창이 있다.  
