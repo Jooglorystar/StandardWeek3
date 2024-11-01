@@ -89,6 +89,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnHealInput(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            CharacterManager.Instance.Player.condition.UseMana(30f);
+            CharacterManager.Instance.Player.condition.Heal(50f);
+        }
+    }
+
     private bool IsGrounded()
     {
         Ray[] rays = new Ray[]

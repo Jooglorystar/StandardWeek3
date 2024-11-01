@@ -11,6 +11,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     public UIConditions uiCondition;
 
     Condition health { get { return uiCondition.health; } }
+    Condition mana { get { return uiCondition.mana; } }
     Condition hunger { get { return uiCondition.hunger; } }
     Condition stamina { get { return uiCondition.stamina; } }
 
@@ -20,6 +21,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     private void Update()
     {
         hunger.Subtract(hunger.passiveValue * Time.deltaTime);
+        mana.Add(mana.passiveValue * Time.deltaTime);
         stamina.Add(stamina.passiveValue * Time.deltaTime);
 
         if (hunger.curValue <= 0.0f)
@@ -46,6 +48,11 @@ public class PlayerCondition : MonoBehaviour, IDamagable
     public void Die()
     {
         Debug.Log("Die");
+    }
+
+    public void UseMana(float value)
+    {
+        mana.Subtract(value);
     }
 
     public void TakePhysicalDamage(int damage)

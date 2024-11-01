@@ -3,6 +3,7 @@ using UnityEngine;
 public class UIConditions : MonoBehaviour
 {
     public Condition health;
+    public Condition mana;
     public Condition hunger;
     public Condition stamina;
 
